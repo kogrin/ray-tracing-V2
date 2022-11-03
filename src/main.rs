@@ -1,7 +1,8 @@
+mod ray;
 mod vec;
 
 use std::io::{stderr, Write};
-use vec::{Color};
+use vec::Color;
 
 fn main() {
     const IMAGE_WIDTH: u64 = 256;
