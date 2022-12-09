@@ -49,13 +49,12 @@ impl Vec3 {
         self / self.length()
     }
 
-    pub fn format_color(self) -> String {
-        format!(
-            "{} {} {}",
-            (255.99 * self[0]) as u64,
-            (255.99 * self[1]) as u64,
-            (255.99 * self[2]) as u64
-        )
+    pub fn format_color(self, sample_per_pixel: u64) -> String {
+        let ir = (256.0 * (self[0] / (sample_per_pixel as f64)).clamp(0.0, 0.999)) as u64;
+        let ig = (256.0 * (self[1] / (sample_per_pixel as f64)).clamp(0.0, 0.999)) as u64;
+        let ib = (256.0 * (self[2] / (sample_per_pixel as f64)).clamp(0.0, 0.999)) as u64;
+
+        format!("{} {} {}", ir, ig, ib)
     }
 }
 
