@@ -13,11 +13,17 @@ use vec::{Color, Point3, Vec3};
 
 use crate::sphere::Sphere;
 
-fn ray_color(r: &Ray, world: &World) -> Color {
+fn ray_color(r: &Ray, world: &World, depth: u64) -> Color {
+
+    // If we've exceeded the ray bounce limit, no more light is gathered.
+    if depth <= 0{
+        return Color::new(0.0,0.0,0.0)
+    }
+
     if let Some(rec) = world.hit(r, 0.0, f64::INFINITY) {
         let target = rec.p + rec.normal + Vec3::random_in_unit_sphere();
         let r = Ray::new(rec.p, target - rec.p);
-        0.5 * ray_color(&r, world)
+        0.5 * ray_color(&r, world, depth - 1)
     } else {
         let unit_direction = r.direction().normalized();
         let t = 0.5 * (unit_direction.y() + 1.0);
@@ -31,6 +37,7 @@ fn main() {
     const IMAGE_WIDTH: u64 = 400;
     const IMAGE_HEIGHT: u64 = ((IMAGE_WIDTH as f64) / ASPECT_RATIO) as u64;
     const SAMPLES_PER_PIXEL: u64 = 100;
+    const MAX_DEPTH: u64 = 5;
 
     // World
     let mut world = World::new();
@@ -60,7 +67,7 @@ fn main() {
                 let v = (j as f64 + random_v) / ((IMAGE_HEIGHT - 1) as f64);
 
                 let r = cam.get_ray(u, v);
-                pixel_color += ray_color(&r, &world);
+                pixel_color += ray_color(&r, &world, MAX_DEPTH);
             }
 
             println!("{}", pixel_color.format_color(SAMPLES_PER_PIXEL));
