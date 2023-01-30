@@ -54,9 +54,15 @@ impl Vec3 {
     }
 
     pub fn format_color(self, sample_per_pixel: u64) -> String {
-        let ir = (256.0 * (self[0] / (sample_per_pixel as f64)).clamp(0.0, 0.999)) as u64;
-        let ig = (256.0 * (self[1] / (sample_per_pixel as f64)).clamp(0.0, 0.999)) as u64;
-        let ib = (256.0 * (self[2] / (sample_per_pixel as f64)).clamp(0.0, 0.999)) as u64;
+        // Divide the color by the number of samples and gamma-correct for gamma=2.0.
+        //let scale = 1.0 / (sample_per_pixel as f64);
+        let _r = (self[0] / (sample_per_pixel as f64)).sqrt();
+        let _g = (self[1] / (sample_per_pixel as f64)).sqrt();
+        let _b = (self[2] / (sample_per_pixel as f64)).sqrt();
+
+        let ir = (256.0 * _r.clamp(0.0, 0.999)) as u64;
+        let ig = (256.0 * _g.clamp(0.0, 0.999)) as u64;
+        let ib = (256.0 * _b.clamp(0.0, 0.999)) as u64;
 
         format!("{} {} {}", ir, ig, ib)
     }
@@ -72,7 +78,7 @@ impl Vec3 {
             ],
         }
     }
-
+    
     pub fn random_in_unit_sphere() -> Vec3 {
         loop {
             let p = Vec3::random(-1.0..1.0);
