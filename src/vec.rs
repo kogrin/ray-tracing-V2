@@ -92,6 +92,15 @@ impl Vec3 {
         return Vec3::random_in_unit_sphere().normalized();
     }
 
+    pub fn random_in_hemisphere(normal: Vec3) -> Vec3 {
+        let in_unit_sphere = Vec3::random_in_unit_sphere();
+        if in_unit_sphere.dot(normal) > 0.0 {
+            // In the same hemisphere as the normal
+            return in_unit_sphere;
+        } else {
+            return (-1.0) * in_unit_sphere;
+        }
+    }
 }
 
 impl Index<usize> for Vec3 {

@@ -14,14 +14,13 @@ use vec::{Color, Point3, Vec3};
 use crate::sphere::Sphere;
 
 fn ray_color(r: &Ray, world: &World, depth: u64) -> Color {
-
     // If we've exceeded the ray bounce limit, no more light is gathered.
-    if depth <= 0{
-        return Color::new(0.0,0.0,0.0)
+    if depth <= 0 {
+        return Color::new(0.0, 0.0, 0.0);
     }
 
     if let Some(rec) = world.hit(r, 0.001, f64::INFINITY) {
-        let target = rec.p + rec.normal + Vec3::random_unit_vector();
+        let target = rec.p + Vec3::random_in_hemisphere(rec.normal);
         let r = Ray::new(rec.p, target - rec.p);
         0.5 * ray_color(&r, world, depth - 1)
     } else {
