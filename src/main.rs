@@ -21,7 +21,7 @@ fn ray_color(r: &Ray, world: &World, depth: u64) -> Color {
     }
 
     if let Some(rec) = world.hit(r, 0.001, f64::INFINITY) {
-        let target = rec.p + rec.normal + Vec3::random_in_unit_sphere();
+        let target = rec.p + rec.normal + Vec3::random_unit_vector();
         let r = Ray::new(rec.p, target - rec.p);
         0.5 * ray_color(&r, world, depth - 1)
     } else {
@@ -36,8 +36,8 @@ fn main() {
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
     const IMAGE_WIDTH: u64 = 400;
     const IMAGE_HEIGHT: u64 = ((IMAGE_WIDTH as f64) / ASPECT_RATIO) as u64;
-    const SAMPLES_PER_PIXEL: u64 = 100;
-    const MAX_DEPTH: u64 = 5;
+    const SAMPLES_PER_PIXEL: u64 = 50;
+    const MAX_DEPTH: u64 = 15;
 
     // World
     let mut world = World::new();
